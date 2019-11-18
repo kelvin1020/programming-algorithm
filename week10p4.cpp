@@ -25,11 +25,14 @@ int main()
 
     else
     {
-        for (int j = 0; j < 5; ++j) // 按位异或交换值
+        if (n != m) // 要考虑n = m 的情况
         {
-            mat[n][j] = mat[n][j]^mat[m][j];
-            mat[m][j] = mat[m][j]^mat[n][j];
-            mat[n][j] = mat[n][j]^mat[m][j];            
+            for (int j = 0; j < 5; ++j) // 按位异或交换值
+            {
+                mat[n][j] = mat[n][j]^mat[m][j];
+                mat[m][j] = mat[m][j]^mat[n][j];
+                mat[n][j] = mat[n][j]^mat[m][j];            
+            }
         }
 
         for (int i = 0; i < 5; ++i)
