@@ -4,58 +4,53 @@
 
 using namespace std;
 
-// 字符串插入
+//函数声明
+int findIndex(int n, int x[]);
+
+// 寻找下标
 int main()
 {
 
-    char str[11] = {'\0'};
-    char substr[4] = {'\0'};
+    int n, ans;
+    int x[100] = {0};
 
+    //输入数组
+    cin >> n;
 
-
-    while(cin.getline(str, 11, ' '))
+    for (int i = 0; i < n; ++i)
     {
-        
-        cin.getline(substr, 4); 
+        cin >> x[i]; 
+    }
 
-        char ans[15] = {'\0'};
-        int index = 0;
-        int l1 = strlen(str);
-        int l2 = strlen(substr);
+    //寻找下标
+    ans = findIndex(n, x);
 
-        // cout << l1 << str << endl;
-        // cout << l2 << substr <<endl;
-
-        for (int i = 0; i < l1; ++i)
-        {
-            if (str[index] < str[i])
-            {
-                index = i;
-            }
-        }
-
-        // cout << index << endl;
-
-        for (int i = 0; i < l1 + l2; ++i)
-        {
-            if (i >= 0 && i <= index)
-            {
-                ans[i] = str[i];
-            }
-            else if (i >= index + 1 && i <= index + l2)
-            {
-                ans[i] = substr[i - index - 1];
-            }
-            else
-            {
-                ans[i] = str[i - l2];    
-            }
-        }
-
-        cout << ans << endl;
+    if (ans >= 0)
+    {
+        cout << ans << endl;   
+    }
+    else
+    {
+        cout << 'N' << endl;        
     }
 
 // good luck:)
     return 0;
 }
 
+
+int findIndex(int n, int x[])
+{
+    int index = -1;
+
+    for (int i = 0; i < n; ++i)
+    {
+        if (x[i] == i)
+        {
+            index = i;
+            break;
+        }
+    }
+
+    return index;
+}
