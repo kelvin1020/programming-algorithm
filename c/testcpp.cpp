@@ -33,5 +33,12 @@ main()
 	cout << sizeof(h) << ' ' << *h << endl;
 	cout << sizeof(h) << ' ' << *(h+1) << endl;	
 	cout << endl;
+
+
+	char i = '\0';
+
+	cout << "\\0 is :"<< (int) i << endl;
+
+	cout << endl;	
 	return 0;
 }
