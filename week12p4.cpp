@@ -15,7 +15,7 @@ int main()
             case '+': cout << a + b << endl; break;
             case '-': cout << a - b << endl; break;
             case '*': cout << a * b << endl; break;
-            case '/': if (b == 0) cout << "Divided by zero!" << endl; break;
+            case '/': if (b == 0) {cout << "Divided by zero!" << endl; break;}
                       cout << a / b << endl; break; 
             default: cout << "Invalid operator!" << endl;
         }
