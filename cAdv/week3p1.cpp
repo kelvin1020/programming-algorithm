@@ -30,7 +30,11 @@ int main()
 			flag = false;
 			size = 0;
 
-			cout << sentence[i];
+			if (sentence[i] != '\0')// 不输出\0
+			{
+				cout << sentence[i];
+			}
+
 		}
 
 		else
