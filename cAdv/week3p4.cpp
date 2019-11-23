@@ -9,23 +9,38 @@ int evolve(char seq[], int size);
 // 括号匹配问题
 int main()
 {
-	char strseq[101] = {'\0'};
-
-	int size;
+	char strseq[101]={'\0'}, seq[101]= {'\0'};
+	int size, key = 0;
 
 	while(cin.getline(strseq, 101))
 	{
-		char seq[101] = {'\0'};
+
+		cout << strseq  << endl;
+
 		size = strlen(strseq);
 		str2blank(strseq, seq, size);
 
 		evolve(seq, size);
 
-		cout << strseq << endl;
-		cout << seq << endl; 
+
+		for (int j = size - 1; j >= 0; --j)
+		{
+	
+			if (seq[j] == '?' || seq[j] == '$')
+			{
+				key = j + 1;
+				break;
+			} 
+		}
+
+	
+		for (int i = 0; i < key; ++i)
+		{
+			cout << seq[i]; 
+		}
+
+		cout << endl;
 	}
-
-
 
 // good luck:)
     return 0;
@@ -78,4 +93,6 @@ int evolve(char seq[], int size) // flag == index + 1
 			seq[i] = '?';
 		}
 	}
+
+	return 0;
 }
