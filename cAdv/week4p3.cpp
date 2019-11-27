@@ -3,7 +3,7 @@
 using namespace std;
 
 //函数声明
-char *outSentence(char word[]); //已有句子， 输入单词
+char *outSentence(char word[]); //输入单词, 输出句子
 int clearSen(char sen[]); //清空句子
 
 // 括号匹配问题
@@ -18,14 +18,10 @@ int main()
 	for(int i = 0; i < n; ++i)
 	{
         cin >> word;
-        if (strlen(sentence = outSentence(word)) == 0)
-        {
-            sentence = outSentence(word);
-        }
-   
+        sentence = outSentence(word);
 	}
 
-    //最后输出
+    //最后一行输出
     if ( strlen(sentence) != 0) 
     {
         cout << sentence << endl;
@@ -39,37 +35,37 @@ char *outSentence(char word[]) //已有句子， 输入单词，输出现有句�
 {
     static char sentence[81]={'\0'}; //局部静态变量，为避免使用全局变量引入
     static char *ps = sentence;      //局部静态变量
-    char *pw = NULL;
 
     if (strlen(sentence) + strlen(word) + 1 < 80) //不满80不输出
     {
-        for(pw = word; *pw != '\0'; pw++, ps++)
-        {
-            *ps = *pw; //word
-        }
-        *ps++ = ' '; //blank     
+        strcat(sentence, word);
+        ps += strlen(word);
+        *ps++ = ' ';                              //单词后空格   
     }
-    else if ( strlen(word) == 80 - strlen(sentence) ) //单词输入
+    else if ( strlen(word) == 80 - strlen(sentence) ) //刚好满80，输入单词，输出，复位
     {
-        for(pw = word; *pw != '\0'; pw++, ps++)
-        {
-            *ps = *pw; //word, no blank
-        }
-        cout << sentence << endl; 
-        // cout << sentence << strlen(sentence) << endl; 
-        clearSen(sentence);
+        strcat(sentence, word);
+        ps += strlen(word);
+                                                  //无单词后空格
+        cout << sentence << endl;                 //输出
+        
+        clearSen(sentence);                       //复位
         ps = sentence;  
-        *ps = ' ';     //标记位，指针不移动, 为下文判断用
     }
-    else //不满80输出
+    else                                          //满80输出，不输入单词，输出，复位，输入单词
     {
-        *(--ps) = '\0';
-        cout << sentence << endl;
-        // cout << sentence << strlen(sentence) << endl; 
-        clearSen(sentence);
-        ps = sentence;       
+        *(--ps) = '\0';                           //需要去最后一个单词的空格
+
+        cout << sentence << endl;                 //输出
+
+        clearSen(sentence);                       //复位
+        ps = sentence;   
+
+        strcat(sentence, word);                   //输入单词
+        ps += strlen(word);
+        *ps++ = ' ';                              //单词后空格   
     }
-    return sentence;
+    return sentence;                              //返回句子
 }
 
 int clearSen(char sen[])
