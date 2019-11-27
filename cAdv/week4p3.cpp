@@ -18,13 +18,11 @@ int main()
 	for(int i = 0; i < n; ++i)
 	{
         cin >> word;
-        // cout << sentence << ' ' << strlen(sentence) << endl;
         if (strlen(sentence = outSentence(word)) == 0)
         {
             sentence = outSentence(word);
         }
-        // cout << word << ' ' << strlen(word) << endl;
-        // cout << sentence << ' ' << strlen(sentence) << endl;
+   
 	}
 
     //最后输出
@@ -39,11 +37,11 @@ int main()
 
 char *outSentence(char word[]) //已有句子， 输入单词，输出现有句子
 {
-    static char sentence[81]={'\0'};
-    static char *ps = sentence; 
+    static char sentence[81]={'\0'}; //局部静态变量，为避免使用全局变量引入
+    static char *ps = sentence;      //局部静态变量
     char *pw = NULL;
 
-    if (strlen(sentence) + strlen(word) + 1 < 80)
+    if (strlen(sentence) + strlen(word) + 1 < 80) //不满80不输出
     {
         for(pw = word; *pw != '\0'; pw++, ps++)
         {
@@ -51,19 +49,23 @@ char *outSentence(char word[]) //已有句子， 输入单词，输出现有句�
         }
         *ps++ = ' '; //blank     
     }
-    else if ( strlen(word) == 80 - strlen(sentence) )
+    else if ( strlen(word) == 80 - strlen(sentence) ) //单词输入
     {
         for(pw = word; *pw != '\0'; pw++, ps++)
         {
             *ps = *pw; //word, no blank
         }
-        cout << sentence << endl; //满80输出
+        cout << sentence << endl; 
+        // cout << sentence << strlen(sentence) << endl; 
         clearSen(sentence);
-        ps = sentence;      
+        ps = sentence;  
+        *ps = ' ';     //标记位，指针不移动, 为下文判断用
     }
-    else //满80输出
+    else //不满80输出
     {
+        *(--ps) = '\0';
         cout << sentence << endl;
+        // cout << sentence << strlen(sentence) << endl; 
         clearSen(sentence);
         ps = sentence;       
     }
