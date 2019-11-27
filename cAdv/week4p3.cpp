@@ -5,8 +5,9 @@ using namespace std;
 //函数声明
 char *outSentence(char word[]); //输入单词, 输出句子
 int clearSen(char sen[]); //清空句子
+int outSen(char sen[]); //输出句子
 
-// 括号匹配问题
+// 文字排版
 int main()
 {           
 	char word[41]={'\0'};
@@ -24,7 +25,7 @@ int main()
     //最后一行输出
     if ( strlen(sentence) != 0) 
     {
-        cout << sentence << endl;
+        outSen(sentence);
     }
 
 // good luck:)
@@ -47,16 +48,14 @@ char *outSentence(char word[]) //已有句子， 输入单词，输出现有句�
         strcat(sentence, word);
         ps += strlen(word);
                                                   //无单词后空格
-        cout << sentence << endl;                 //输出
+        outSen(sentence);                 //输出
         
         clearSen(sentence);                       //复位
         ps = sentence;  
     }
     else                                          //满80输出，不输入单词，输出，复位，输入单词
     {
-        *(--ps) = '\0';                           //需要去最后一个单词的空格
-
-        cout << sentence << endl;                 //输出
+        outSen(sentence);                 //输出
 
         clearSen(sentence);                       //复位
         ps = sentence;   
@@ -77,5 +76,18 @@ int clearSen(char sen[])
     return 0;
 }
 
+int outSen(char sen[])//不输出'/0' 及 ' '
+{
+    for (char *p = sen; p < sen + strlen(sen) ; ++p)
+    {
+        if(p == sen + strlen(sen) - 1 && *p == ' ') 
+        {
+            continue; //如果最后一个为空格，则跳过输出
+        }  
+        cout << *p;
+    }
 
-
+    cout << endl;
+    // cout << strlen(sen) << endl;
+    return 0;
+}
