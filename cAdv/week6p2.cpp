@@ -10,7 +10,7 @@ int clearSen(char sen[]);
 int main()
 {
 	int n;
-	char data[100][256] = {'\0'};
+	char data[1000][256] = {'\0'};
 	cin >> n;
     cin.get();
 
