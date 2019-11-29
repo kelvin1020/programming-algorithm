@@ -12,7 +12,7 @@ int findmax(int mat[][2], int n);
 int main()
 {
     int n;
-    int mat[100][2];
+    int mat[1000][2];
     cin >> n;
 
     for (int i = 0; i < n; ++i)
@@ -22,7 +22,7 @@ int main()
 
     sortmat(mat, n);
     findmax(mat, n);
-    
+
 // good luck:)
     return 0;
 }
@@ -83,5 +83,3 @@ int findmax(int mat[][2], int n)
     }   
     return 0;
 }
-
-

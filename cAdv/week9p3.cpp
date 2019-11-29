@@ -1,4 +1,7 @@
 #include<iostream>
+#include<cstring>
+#include<stdlib.h>
+#include<iomanip>
 using namespace std;
 
 //函数声明
