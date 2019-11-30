@@ -19,12 +19,7 @@ int calMat(char mat[][101], int n, int m, coord position);  //计算最短步数
 bool *getPossibleDirection(char mat[][101], int n, int m, coord position, coord posList[]) ;//获取合法方向
 bool isInPosList(coord position, coord posList[]);            //是否走过？
 
-coord move(char mat[][101], int n, int m, coord position, char order);
-
-//全局变量
-
-coord posList[100 * 3] ; 
-int   posk = 0;
+coord move(coord position, char order);
 
 
 // 走出迷宫
@@ -47,20 +42,6 @@ int main()
 
 
     coord start = getCoord(mat, n, m, 'S');
-
-
-    if (posk == 0)
-    {
-        posList[posk++] = start; 
-
-        for (int i = 1; i < 100 * 3; i++)
-        {
-            posList[i].x = -1;
-            posList[i].y = -1;
-        }
-    }
-
-
     
     cout << calMat(mat, n, m, start) << endl;
 
@@ -85,11 +66,32 @@ int outputMat(char mat[][101], int n, int m)
 
 int calMat(char mat[][101], int n, int m, coord position)
 {
+    static coord start = getCoord(mat, n, m, 'S');
+    static coord end = getCoord(mat, n, m, 'T');
+
+    static coord posList[300] ; 
+    static int   posk = 0;
+
+    static char moveList[4] = {'u', 'd', 'l', 'r'};
+
+    bool flag = false;
+
+    if (posk == 0)
+    {
+        posList[posk++] = start; 
+
+        for (int i = 1; i < 300; i++)
+        {
+            posList[i].x = -1;
+            posList[i].y = -1;
+        }
+    }
+
     coord temp = position;
     
-    static coord end = getCoord(mat, n, m, 'T');
+    int returnValue = -3;
     int record[4] = {-1, -1, -1, -1};
-    int minValue = 100 * n;
+    int minValue = 1000;
     bool *posDirection;
 
     if (position.x == end.x && position.y == end.y) //如果位置到达终点，返回步数0
@@ -103,39 +105,25 @@ int calMat(char mat[][101], int n, int m, coord position)
         posDirection = getPossibleDirection(mat, n, m, position, posList);
         //得到可能的行动， 不能等于已经走过的
 
-        if (posDirection[0])
+        for (int i = 0; i < 4; i++)
         {
-            position = move(mat, n, m, position, 'u');
-            posList[posk++] = position; 
-            record[0] = calMat(mat, n, m, position);
-            position = temp;
-        } 
+            if (posDirection[i])
+            {
+                position = move(position, moveList[i]);
+                posList[posk++] = position; 
 
-        if (posDirection[1])
-        {
-            position = move(mat, n, m, position, 'd');
-            posList[posk++] = position; 
-            record[1] = calMat(mat, n, m, position);
-            position = temp;
+                returnValue = calMat(mat, n, m, position); //如果不是死胡同-1，则返回值
+                if (returnValue != -1)
+                {
+                    record[i] = returnValue;
+                    flag = true;
+                }  
+
+                posList[--posk] = {-1, -1};              //清除效果              
+                position = temp;
+            } 
         }
-
-        if (posDirection[2])
-        {
-            position = move(mat, n, m, position, 'l');
-            posList[posk++] = position;             
-            record[2] = calMat(mat, n, m, position);
-            position = temp;
-        }
-
-        if (posDirection[3])
-        {
-            position = move(mat, n, m, position, 'r');
-            posList[posk++] = position;             
-            if (position.x != -1 && position.y != -1) record[3] = calMat(mat, n, m, position);
-            position = temp;
-        }
-
-
+        
         //选择最小步数
         for (int i = 0; i < 4; ++i)
         {
@@ -148,15 +136,17 @@ int calMat(char mat[][101], int n, int m, coord position)
             }
         }
 
-        if (minValue != (100 * n) )
+
+        if (flag == false) //死胡同
+        {
+            return -1;
+        }
+        
+        if (minValue != 1000) //返回值
         {
             return 1 + minValue;
         }
-
     }
-       
-    
-    return 0;
 }
 
 coord getCoord(char mat[][101], int n, int m, char target)
@@ -234,10 +224,8 @@ bool isInPosList(coord position, coord posList[])
 }
 
 
-coord move(char mat[][101], int n, int m, coord position, char order)
+coord move(coord position, char order)
 {
-    coord temp = {-1, -1}; 
-
     switch (order)
     {
     case 'u': position.x -= 1; break;
@@ -246,14 +234,7 @@ coord move(char mat[][101], int n, int m, coord position, char order)
     case 'r': position.y += 1; break;
     }
 
-    if ( isLegal(mat, n, m, position))
-    {
-        return position;
-    }
-    else
-    {
-        return temp;
-    }
+    return position;
 }
 
 bool isLegal(char mat[][101], int n, int m, coord start)
