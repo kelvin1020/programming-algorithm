@@ -10,6 +10,7 @@ struct coord  //坐标
 };
 
 
+
 //函数声明
 int outputMat(char mat[][101], int n, int m);
 coord getCoord(char mat[][101], int n, int m, char target); //返回目标点的坐标
@@ -21,6 +22,11 @@ bool isInPosList(coord position, coord posList[]);            //是否走过？
 
 coord move(coord position, char order);
 
+
+//    
+
+static coord posList[300] ; 
+static int   posk = 0;
 
 // 走出迷宫
 
@@ -42,7 +48,18 @@ int main()
 
 
     coord start = getCoord(mat, n, m, 'S');
-    
+
+    if (posk == 0)
+    {
+        posList[posk++] = start; 
+
+        for (int i = 1; i < 300; i++)
+        {
+            posList[i].x = -1;
+            posList[i].y = -1;
+        }
+    }
+
     cout << calMat(mat, n, m, start) << endl;
 
 // good luck:)
@@ -66,27 +83,10 @@ int outputMat(char mat[][101], int n, int m)
 
 int calMat(char mat[][101], int n, int m, coord position)
 {
-    static coord start = getCoord(mat, n, m, 'S');
     static coord end = getCoord(mat, n, m, 'T');
-
-    static coord posList[300] ; 
-    static int   posk = 0;
-
-    static char moveList[4] = {'u', 'd', 'l', 'r'};
+    static char moveList[4] = {'u', 'd', 'l', 'r'}; //动作列表
 
     bool flag = false;
-
-    if (posk == 0)
-    {
-        posList[posk++] = start; 
-
-        for (int i = 1; i < 300; i++)
-        {
-            posList[i].x = -1;
-            posList[i].y = -1;
-        }
-    }
-
     coord temp = position;
     
     int returnValue = -3;
@@ -117,10 +117,11 @@ int calMat(char mat[][101], int n, int m, coord position)
                 {
                     record[i] = returnValue;
                     flag = true;
-                }  
-
+                }
+                
                 posList[--posk] = {-1, -1};              //清除效果              
                 position = temp;
+                posDirection = getPossibleDirection(mat, n, m, position, posList);    //重新更新可选方向，避免被子调用覆盖                
             } 
         }
         
@@ -135,7 +136,6 @@ int calMat(char mat[][101], int n, int m, coord position)
                 }
             }
         }
-
 
         if (flag == false) //死胡同
         {
