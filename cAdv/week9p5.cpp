@@ -3,6 +3,8 @@
 #include<cstring>
 using namespace std;
 
+const int bigNum = 100;
+
 //结构体
 struct coord  //坐标
 {
@@ -25,7 +27,7 @@ coord move(coord position, char order);
 
 //    
 
-static coord posList[300] ; 
+static coord posList[bigNum] ; 
 static int   posk = 0;
 
 // 走出迷宫
@@ -43,8 +45,8 @@ int main()
         cin.getline(mat[i], m + 1);
     }
     
-    cout << endl;
-    outputMat(mat,n, m);
+    // cout << endl;
+    // outputMat(mat,n, m);
 
 
     coord start = getCoord(mat, n, m, 'S');
@@ -53,7 +55,7 @@ int main()
     {
         posList[posk++] = start; 
 
-        for (int i = 1; i < 300; i++)
+        for (int i = 1; i < bigNum; i++)
         {
             posList[i].x = -1;
             posList[i].y = -1;
@@ -91,7 +93,7 @@ int calMat(char mat[][101], int n, int m, coord position)
     
     int returnValue = -3;
     int record[4] = {-1, -1, -1, -1};
-    int minValue = 1000;
+    int minValue = bigNum;
     bool *posDirection;
 
     if (position.x == end.x && position.y == end.y) //如果位置到达终点，返回步数0
@@ -142,7 +144,7 @@ int calMat(char mat[][101], int n, int m, coord position)
             return -1;
         }
         
-        if (minValue != 1000) //返回值
+        if (minValue != bigNum) //返回值
         {
             return 1 + minValue;
         }
