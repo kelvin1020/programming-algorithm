@@ -27,18 +27,10 @@ coord posList[100 * 3] ;
 int   posk = 0;
 
 
-
-
-
 // 走出迷宫
 
 int main()
 {
-
-
-
-
-
     int n, m;
     char mat[101][101] = {'\0'};
 
@@ -158,7 +150,7 @@ int calMat(char mat[][101], int n, int m, coord position)
 
         if (minValue != (100 * n) )
         {
-            return minValue;
+            return 1 + minValue;
         }
 
     }
