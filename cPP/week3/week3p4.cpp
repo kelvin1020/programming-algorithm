@@ -114,7 +114,7 @@ public:
                 cout << setfill('0') << setw(3) << t++ << ' ' << name << warriorList[createOrder[numCir]].wname \
                 << ++num << " born with strength " << warriorList[createOrder[numCir]].strength << ','\
                 << warriorList[createOrder[numCir]].wnum << ' ' << warriorList[createOrder[numCir]].wname \
-                << "in " << name << "headquater" << endl;
+                << "in " << name << "headquarter" << endl;
                 numCir++;
                 return true;
             }
