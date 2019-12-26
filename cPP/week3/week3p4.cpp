@@ -78,7 +78,7 @@ public:
                     cout << setfill('0') << setw(3) << t++ << ' ' << name << warriorList[createOrder[i]].wname \
                     << ++num << " born with strength " << warriorList[createOrder[i]].strength << ','\
                     << warriorList[createOrder[i]].wnum << ' ' << warriorList[createOrder[i]].wname \
-                    << "in " << name << "headquater" << endl;
+                    << "in " << name << "headquarter" << endl;
                 }
                 else
                 {
