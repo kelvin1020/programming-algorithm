@@ -71,7 +71,7 @@ public:
         {
             for (int i = 0; i < 5; i++)
             {
-                if (m - warriorList[createOrder[i]].strength > 0)
+                if (m - warriorList[createOrder[i]].strength >= 0)
                 {
                     warriorList[createOrder[i]].addWarrior();  // add Warrior
                     m -= warriorList[createOrder[i]].strength; //m decrease
@@ -107,8 +107,7 @@ public:
         for (; count < 5; numCir++)
         {
             numCirAdd(numCir);
-            // cout << i << endl;
-            if (m - warriorList[createOrder[numCir]].strength > 0)
+            if (m - warriorList[createOrder[numCir]].strength >= 0)
             {
                 warriorList[createOrder[numCir]].addWarrior();  // add Warrior
                 m -= warriorList[createOrder[numCir]].strength; //m decrease
