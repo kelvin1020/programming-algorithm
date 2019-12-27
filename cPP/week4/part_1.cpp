@@ -10,6 +10,16 @@ public:
         cout << r << "+" << i << "i" << endl;
     }
 // 在此处补充你的代码
+    Complex & operator=(const string & s)
+    {
+        int pos = s.find("+", 0);
+        string sTmp = s.substr(0, pos);
+        r = atof( sTmp.c_str() );
+        sTmp = s.substr(pos + 1, s.length()-pos-2);
+        i = atof(sTmp.c_str());
+        return *this;
+    }
+
 };
 int main() {
     Complex a;
