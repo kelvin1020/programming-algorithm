@@ -48,7 +48,7 @@ protected:
 public:
     const char * weaponName[3] = {"sword", "bomb", "arrow"};
     warrior(int num, int strength, const headquarter *base):wnum(num), wstrength(strength), wbase(base){};  //{ cout<< wstrength << ' ' << wnum;};
-    int say()
+    virtual int say()
     {
         return 0;
     };
@@ -64,16 +64,17 @@ private:
 public:
     dragon(int num, int strength, const headquarter *base):warrior(num, strength, base)
     {
+        num += 1;
         weapon = num%3;
-        morale = ((double) (wbase->m)) / ((double) (wbase->strengthList[0]));
+
     }
-    int say()
+    virtual int say()
     {
-        cout << "It has a " << weaponName[weapon] << ",and it's morale is " << setw(3) << morale << endl;
+        morale = ((double) (wbase->m)) / ((double) (wbase->strengthList[0]));
+        cout << "It has a " << weaponName[weapon] << ",and it's morale is " << setprecision(3) << morale << endl;
         return 0;
     }
 };
-
 
 class ninja:public warrior
 {
@@ -83,8 +84,14 @@ private:
 public:
     ninja(int num, int strength, const headquarter *base):warrior(num, strength, base)
     {
+        num += 1;
         weapons[0] = num%3;
         weapons[1] = (num+1)%3;        
+    }
+    virtual int say()
+    {
+        cout << "It has a " << weaponName[weapons[0]] << " and a " << weaponName[weapons[1]] << endl;
+        return 0;
     }
 };
 
@@ -97,8 +104,14 @@ private:
 public:
     iceman(int num, int strength, const headquarter *base):warrior(num, strength, base)
     {
+        num += 1;
         weapon = num%3;
     }
+    virtual int say()
+    {
+        cout << "It has a " << weaponName[weapon] << endl;
+        return 0;
+    }    
 };
 
 class lion:public warrior
@@ -107,10 +120,13 @@ private:
    int loyalty;
 
 public:
-    lion(int num, int strength, const headquarter *base):warrior(num, strength, base)
+    lion(int num, int strength, const headquarter *base):warrior(num, strength, base){};
+    virtual int say()
     {
         loyalty = (wbase->m);
-    }
+        cout << "It's loyalty is " << loyalty << endl;
+        return 0;
+    }       
 };
 
 class wolf:public warrior
