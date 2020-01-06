@@ -71,7 +71,8 @@ public:
     virtual int say()
     {
         morale = ((double) (wbase->m)) / ((double) (wbase->strengthList[0]));
-        cout << "It has a " << weaponName[weapon] << ",and it's morale is " << setprecision(3) << morale << endl;
+        cout << "It has a " << weaponName[weapon] << ",and it's morale is " << setiosflags(ios::fixed) << setprecision(2)\
+        << morale << endl;
         return 0;
     }
 };
