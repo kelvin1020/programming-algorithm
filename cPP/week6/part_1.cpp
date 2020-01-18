@@ -23,6 +23,7 @@ class C:public B {
 };
 void Call(
 // 在此处补充你的代码
+B & p //指向基类，非虚函数无多态
          )  {
     p.Fun();  p.Do();
 }
