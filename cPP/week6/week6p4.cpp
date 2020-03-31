@@ -39,7 +39,7 @@ public:
     int atkList[5];       //the atk of  dragon 、ninja、iceman、lion、wolf
 
     headquarter(string name_, int m_, int nCity_, int r_, int k_, int tLimit_, const int *strengthList_, const int *atkList_);
-    int addWarrior(int code, int num, int wstrength); // 0 dragon 、1 ninja、2 iceman、3 lion、4 wolf
+    int addWarrior(int code, int num, int wstrength, int watk); // 0 dragon 、1 ninja、2 iceman、3 lion、4 wolf
     bool createWarrior(const int * createOrder);
     ~headquarter();
 };
@@ -57,12 +57,12 @@ protected:
  
 public:
     const char * weaponName[3] = {"sword", "bomb", "arrow"};
-    warrior(int num, int strength, const headquarter *base):wnum(num), wstrength(strength), wbase(base){};  //{ cout<< wstrength << ' ' << wnum;};
+    warrior(int num, int strength, int atk, const headquarter *base):wnum(num), wstrength(strength), watk(atk), wbase(base){};  //{ cout<< wstrength << ' ' << wnum;};
     virtual int say()
     {
         return 0;
     };
-    //~warrior();        //生命值降为0后析构
+    virtual ~warrior(){};   //析构，生命值降为0后？
 };
 
 
@@ -73,7 +73,7 @@ private:
    double morale;
 
 public:
-    dragon(int num, int strength, const headquarter *base):warrior(num, strength, base)
+    dragon(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base)
     {
         num += 1;
         weapon = num%3;
@@ -94,7 +94,7 @@ private:
    int weapons[2];
 
 public:
-    ninja(int num, int strength, const headquarter *base):warrior(num, strength, base)
+    ninja(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base)
     {
         num += 1;
         weapons[0] = num%3;
@@ -114,7 +114,7 @@ private:
    int weapon;
 
 public:
-    iceman(int num, int strength, const headquarter *base):warrior(num, strength, base)
+    iceman(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base)
     {
         num += 1;
         weapon = num%3;
@@ -132,7 +132,7 @@ private:
    int loyalty;
 
 public:
-    lion(int num, int strength, const headquarter *base):warrior(num, strength, base){};
+    lion(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base){};
     virtual int say()
     {
         loyalty = (wbase->m);
@@ -144,7 +144,7 @@ public:
 class wolf:public warrior
 {
 public:
-    wolf(int num, int strength, const headquarter *base):warrior(num, strength, base){};
+    wolf(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base){};
 };
 
 headquarter::headquarter(string name_, int m_, int nCity_, int r_, int k_, int tLimit_, const int *strengthList_, const int *atkList_)
@@ -162,16 +162,16 @@ headquarter::headquarter(string name_, int m_, int nCity_, int r_, int k_, int t
 }
 
 
- int headquarter::addWarrior(int code, int num, int wstrength) // 0 dragon 、1 ninja、2 iceman、3 lion、4 wolf
+ int headquarter::addWarrior(int code, int num, int wstrength, int watk) // 0 dragon 、1 ninja、2 iceman、3 lion、4 wolf
 {
 
     switch (code)
     {
-    case 0: warriorList[num] = new dragon(num, wstrength, this); break;
-    case 1: warriorList[num] = new ninja(num, wstrength, this); break;
-    case 2: warriorList[num] = new iceman(num, wstrength, this); break;
-    case 3: warriorList[num] = new lion(num, wstrength, this); break;
-    case 4: warriorList[num] = new wolf(num, wstrength, this); break;        
+    case 0: warriorList[num] = new dragon(num, wstrength, watk, this); break;
+    case 1: warriorList[num] = new ninja(num, wstrength, watk, this); break;
+    case 2: warriorList[num] = new iceman(num, wstrength, watk, this); break;
+    case 3: warriorList[num] = new lion(num, wstrength, watk, this); break;
+    case 4: warriorList[num] = new wolf(num, wstrength, watk, this); break;        
     }
     return 0;
 }
@@ -180,17 +180,19 @@ bool headquarter::createWarrior(const int * createOrder)
 {
     int count = 0;
     int wstrength;
+    int watk;
     const char* wname;
 
     for (; count < 5; numCir++)
     {
         numCir %= 5;
         wstrength = strengthList[createOrder[numCir]];
+        watk = atkList[createOrder[numCir]];
         wname = warriorNameList[createOrder[numCir]];
 
         if (m - wstrength >= 0)  //判断是否还能创建
         {
-            addWarrior(createOrder[numCir],  num, wstrength);          // add Warrior
+            addWarrior(createOrder[numCir],  num, wstrength, watk);          // add Warrior
             m -= strengthList[createOrder[numCir]];                    //m decrease
 
             cout << setfill('0') << setw(3) << t++ << ":00 " << name << ' ' << wname << ' ' << ++num << " born"<< endl;
