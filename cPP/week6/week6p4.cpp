@@ -82,7 +82,7 @@ public:
     virtual int say()
     {
         morale = ((double) (wbase->m)) / ((double) (wbase->strengthList[0]));
-        cout << "It has a " << weaponName[weapon] << ",and it's morale is " << setiosflags(ios::fixed) << setprecision(2)\
+        cout <<  "Its morale is " << setiosflags(ios::fixed) << setprecision(2)\
         << morale << endl;
         return 0;
     }
@@ -193,11 +193,8 @@ bool headquarter::createWarrior(const int * createOrder)
             addWarrior(createOrder[numCir],  num, wstrength);          // add Warrior
             m -= strengthList[createOrder[numCir]];                    //m decrease
 
-            cout << setfill('0') << setw(3) << t++ << ":00 " << name << ' ' << wname << ' '\
-            << ++num << " born with strength " << wstrength << ','\
-            << ++warriorNum[createOrder[numCir]] << ' ' << wname \
-            << " in " << name << ' '<< "headquarter" << endl;
-
+            cout << setfill('0') << setw(3) << t++ << ":00 " << name << ' ' << wname << ' ' << ++num << " born"<< endl;
+            ++warriorNum[createOrder[numCir]];  //next warrior
             warriorList[num-1]->say();   //say
 
             numCir++;
