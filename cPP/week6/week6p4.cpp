@@ -20,8 +20,6 @@ private:
     int k;                     // loyalty decrease per round of lion
     int tLimit;                // output events of 0 <= T <= 5000
 
-    int t;                     // real time
-
     int num;                   // warrior number 
     int numCir;                 // created warrior number   
     bool OutputFinished; 
@@ -40,7 +38,9 @@ public:
 
     headquarter(string name_, int m_, int nCity_, int r_, int k_, int tLimit_, const int *strengthList_, const int *atkList_);
     int addWarrior(int code, int num, int wstrength, int watk); // 0 dragon 、1 ninja、2 iceman、3 lion、4 wolf
-    bool createWarrior(const int * createOrder);
+    bool createWarrior(const int * createOrder, int t_); // t:00
+    bool lionRunAway(int t_); // t:05
+
     ~headquarter();
 };
 
@@ -51,11 +51,13 @@ private:
     int wnum;             //编号
     int wstrength;        //生命值
     int watk;             //攻击力
+    friend class headquarter;
 
 protected:
     const headquarter * wbase;  //从属基地
  
 public:
+    string wname = "None";         //类型
     const char * weaponName[3] = {"sword", "bomb", "arrow"};
     warrior(int num, int strength, int atk, const headquarter *base):wnum(num), wstrength(strength), watk(atk), wbase(base){};  //{ cout<< wstrength << ' ' << wnum;};
     virtual int say()
@@ -75,6 +77,7 @@ private:
 public:
     dragon(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base)
     {
+        wname = "dragon";
         num += 1;
         weapon = num%3;
 
@@ -96,15 +99,16 @@ private:
 public:
     ninja(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base)
     {
+        wname = "ninjia";
         num += 1;
         weapons[0] = num%3;
         weapons[1] = (num+1)%3;        
     }
-    virtual int say()
-    {
-        cout << "It has a " << weaponName[weapons[0]] << " and a " << weaponName[weapons[1]] << endl;
-        return 0;
-    }
+    // virtual int say()
+    // {
+    //     cout << "It has a " << weaponName[weapons[0]] << " and a " << weaponName[weapons[1]] << endl;
+    //     return 0;
+    // }
 };
 
 
@@ -116,14 +120,15 @@ private:
 public:
     iceman(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base)
     {
+        wname = "iceman";
         num += 1;
         weapon = num%3;
     }
-    virtual int say()
-    {
-        cout << "It has a " << weaponName[weapon] << endl;
-        return 0;
-    }    
+    // virtual int say()
+    // {
+    //     cout << "It has a " << weaponName[weapon] << endl;
+    //     return 0;
+    // }    
 };
 
 class lion:public warrior
@@ -132,7 +137,23 @@ private:
    int loyalty;
 
 public:
-    lion(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base){};
+    lion(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base)
+    {
+        wname = "lion";
+    }
+    bool ifRun()
+    {
+        if (loyalty <= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
     virtual int say()
     {
         loyalty = (wbase->m);
@@ -144,13 +165,15 @@ public:
 class wolf:public warrior
 {
 public:
-    wolf(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base){};
+    wolf(int num, int strength, int atk, const headquarter *base):warrior(num, strength, atk, base)
+    {
+        wname = "wolf";
+    }
 };
 
 headquarter::headquarter(string name_, int m_, int nCity_, int r_, int k_, int tLimit_, const int *strengthList_, const int *atkList_)
 {
     name = name_;
-    t  = 0;   
     m = m_;
     num = 0; 
     numCir = 0;
@@ -158,6 +181,10 @@ headquarter::headquarter(string name_, int m_, int nCity_, int r_, int k_, int t
     for (int i = 0; i < 5; i++)
     {
         strengthList[i] = strengthList_[i];
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        atkList[i] = atkList_[i];
     }
 }
 
@@ -176,7 +203,7 @@ headquarter::headquarter(string name_, int m_, int nCity_, int r_, int k_, int t
     return 0;
 }
 
-bool headquarter::createWarrior(const int * createOrder)
+bool headquarter::createWarrior(const int * createOrder, int t_) // t:00
 {
     int count = 0;
     int wstrength;
@@ -195,7 +222,7 @@ bool headquarter::createWarrior(const int * createOrder)
             addWarrior(createOrder[numCir],  num, wstrength, watk);          // add Warrior
             m -= strengthList[createOrder[numCir]];                    //m decrease
 
-            cout << setfill('0') << setw(3) << t++ << ":00 " << name << ' ' << wname << ' ' << ++num << " born"<< endl;
+            cout << setfill('0') << setw(3) << t_ << ":00 " << name << ' ' << wname << ' ' << ++num << " born"<< endl;
             ++warriorNum[createOrder[numCir]];  //next warrior
             warriorList[num-1]->say();   //say
 
@@ -208,10 +235,33 @@ bool headquarter::createWarrior(const int * createOrder)
 
     if(OutputFinished == false)  // 如果不能创建，则
     {
-        cout << setfill('0') << setw(3) << t << ' ' << name << ' ' << "headquarter stops making warriors" << endl;
+        cout << setfill('0') << setw(3) << t_ << ' ' << name << ' ' << "headquarter stops making warriors" << endl;
         OutputFinished = true;
     }
     return false;         
+}
+
+bool headquarter::lionRunAway(int t_) // t:05
+{
+    lion *runLion = NULL;
+    bool ifRun = false;
+
+    for (int i = 0; warriorList[i] != NULL && warriorList[i]->wname != "dead"; i++)
+    {
+        if (warriorList[i]->wname == "lion")
+        {
+            runLion = (lion *) warriorList[i];  //强制类型转换，将基类指正转换为派生类，以调用派生类函数，特征
+            if (runLion->ifRun() == true)
+            {
+                warriorList[i]->wname = "dead";
+                cout << setfill('0') << setw(3) << t_ << ":05 " << name << ' ' << "lion" << ' ' << warriorList[i]->wnum
+                     << " ran away" << endl;
+            }
+        }
+        ifRun = true;
+    }
+
+    return ifRun;
 }
 
 headquarter::~headquarter()
@@ -239,7 +289,7 @@ int main()
 
     int redOrder[5] = {2, 3, 4, 1, 0};
     int blueOrder[5] = {3, 0, 1, 2, 4};
-    bool a,b;
+    // bool a,b;
     cin >> n;
 
     for (int i = 0; i < n; i++)
@@ -260,15 +310,18 @@ int main()
 
         cout << "Case:" << i + 1 << endl;
 
-        for (int i = 0;; i++)
+        ////////////////
+        tLimit = 5;   //
+        /////////////// 修改终止条件！
+
+
+        for (int i = 0; i <= tLimit; i++) //i 整点时刻
         {
-           a = !red.createWarrior(redOrder);
-           b = !blue.createWarrior(blueOrder);
-           
-           if (a && b)
-           {
-               break;
-           }
+            red.createWarrior(redOrder, i);      //t:00
+            blue.createWarrior(blueOrder, i);    //t:00
+
+            red.lionRunAway(i);                //t:05
+            blue.lionRunAway(i);               //t:05
         }
     }
     return 0;
