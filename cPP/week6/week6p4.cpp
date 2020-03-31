@@ -12,9 +12,16 @@ class warrior;
 class headquarter
 {
 private:
-    string name;  
-    int t;                     // time
-    int m;                     // total strength
+    string name;
+
+    int m;                     // total strength of headquarter( 1 <= m <= 10000)
+    int nCity;                 // city number    ( 1 <= N <= 20 )
+    int r;                     // atk of arrow
+    int k;                     // loyalty decrease per round of lion
+    int tLimit;                // output events of 0 <= T <= 5000
+
+    int t;                     // real time
+
     int num;                   // warrior number 
     int numCir;                 // created warrior number   
     bool OutputFinished; 
@@ -28,8 +35,10 @@ private:
 
 public:
 
-    int strengthList[5];       // dragon 、ninja、iceman、lion、wolf   
-    headquarter(string name_, int m_, const int * strengthList_);
+    int strengthList[5];       // dragon 、ninja、iceman、lion、wolf
+    int atkList[5];       //the atk of  dragon 、ninja、iceman、lion、wolf
+
+    headquarter(string name_, int m_, int nCity_, int r_, int k_, int tLimit_, const int *strengthList_, const int *atkList_);
     int addWarrior(int code, int num, int wstrength); // 0 dragon 、1 ninja、2 iceman、3 lion、4 wolf
     bool createWarrior(const int * createOrder);
     ~headquarter();
@@ -41,6 +50,7 @@ class warrior
 private:
     int wnum;             //编号
     int wstrength;        //生命值
+    int watk;             //攻击力
 
 protected:
     const headquarter * wbase;  //从属基地
@@ -52,6 +62,7 @@ public:
     {
         return 0;
     };
+    //~warrior();        //生命值降为0后析构
 };
 
 
@@ -136,8 +147,7 @@ public:
     wolf(int num, int strength, const headquarter *base):warrior(num, strength, base){};
 };
 
-
-headquarter::headquarter(string name_, int m_, const int * strengthList_)
+headquarter::headquarter(string name_, int m_, int nCity_, int r_, int k_, int tLimit_, const int *strengthList_, const int *atkList_)
 {
     name = name_;
     t  = 0;   
@@ -183,7 +193,7 @@ bool headquarter::createWarrior(const int * createOrder)
             addWarrior(createOrder[numCir],  num, wstrength);          // add Warrior
             m -= strengthList[createOrder[numCir]];                    //m decrease
 
-            cout << setfill('0') << setw(3) << t++ << ' ' << name << ' ' << wname << ' '\
+            cout << setfill('0') << setw(3) << t++ << ":00 " << name << ' ' << wname << ' '\
             << ++num << " born with strength " << wstrength << ','\
             << ++warriorNum[createOrder[numCir]] << ' ' << wname \
             << " in " << name << ' '<< "headquarter" << endl;
@@ -197,7 +207,7 @@ bool headquarter::createWarrior(const int * createOrder)
 
     }
 
-    if(OutputFinished == false)
+    if(OutputFinished == false)  // 如果不能创建，则
     {
         cout << setfill('0') << setw(3) << t << ' ' << name << ' ' << "headquarter stops making warriors" << endl;
         OutputFinished = true;
@@ -218,8 +228,16 @@ int main()
 {
 
     int n;                  // case number
-    int m;                  // total life value in headquater  10000
+
+    int m;                  // total strength of headquarter( 1 <= m <= 10000)
+    int nCity;              // city number    ( 1 <= N <= 20 )
+    int r;                  // atk of arrow
+    int k;                  // loyalty decrease per round of lion
+    int tLimit;             // output events of 0 <= T <= 5000
+
     int strengthList[5];    // dragon 、ninja、iceman、lion、wolf (0 ~ 10000)
+    int atkList[5];         // the atk of dragon 、ninja、iceman、lion、wolf
+
     int redOrder[5] = {2, 3, 4, 1, 0};
     int blueOrder[5] = {3, 0, 1, 2, 4};
     bool a,b;
@@ -227,14 +245,19 @@ int main()
 
     for (int i = 0; i < n; i++)
     {
-        cin >> m;
+        cin >> m >> nCity >> r >> k >> tLimit;
 
         for (int i = 0; i < 5; i++)
         {
             cin >> strengthList[i];
         }
 
-        headquarter red("red", m, strengthList), blue("blue", m, strengthList);
+        for (int i = 0; i < 5; i++)
+        {
+            cin >> atkList[i];
+        }
+
+        headquarter red("red", m, nCity, r, k, tLimit, strengthList, atkList), blue("blue", m, nCity, r, k, tLimit, strengthList, atkList);
 
         cout << "Case:" << i + 1 << endl;
 
